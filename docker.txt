@@ -1,0 +1,198 @@
+Docker installation on ubuntu
+=============================
+
+sudo apt-get remove docker docker-engine docker.io containerd runc
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
+sudo add-apt-repository deb [arch=amd64] https://download.docker.com/linux/ubuntu  $(lsb_release -cs)  stable"
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+
+ 50  mkdir docker-ws
+   51  ls
+   52  cd docker-ws/
+   53  ls
+  
+   66  curl -fsSL https://get.docker.com -o get-docker.sh
+   67  sudo usermod -aG docker your-user
+   68  sudo usermod -aG docker docker
+   69  sudo useradd -aG docker docker
+   70  sudo service docker status
+
+download docker image
+---------------------
+#sudo docker image
+
+login to docker image
+#sudo docker run -it centos:8
+
+Save container
+-----------------
+sudo docker commit 22d0e6ae5916 sabacp/myubuntu
+
+ubuntu@ip-172-31-26-16:~$ sudo docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+myubuntu/sabacp     latest              fd2b45401147        21 hours ago        192MB
+ubuntu              latest              cf0f3ca922e0        5 days ago          64.2MB
+centos              8                   0f3e07c0138f        3 weeks ago         220MB
+
+
+Dockerfile
+----------
+mkdir docker-ws
+ cd docker-ws
+#vi docker
+
+FROM ubuntu 
+RUN apt-get update 
+RUN apt-get -y install apache2 
+ADD .  /var/www/html 
+ENTRYPOINT apachectl -D FOREGROUND 
+ENV name Devops Intellipaat
+
+
+sudo docker build -t sabacp/myubu .
+
+sudo docker run -itd -p 80:80 sabacp/myubu
+
+another container 
+sudo docker run -itd -p 443:80 sabacp/myubu
+
+
+ubuntu@ip-172-31-26-16:~/docker-ws$ sudo docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                 NAMES
+f9e865da7b0b        sabacp/myubu        "/bin/sh -c 'apachec…"   2 minutes ago       Up 2 minutes        0.0.0.0:443->80/tcp   festive_volhard
+bd3762bcd2a5        sabacp/myubu        "/bin/sh -c 'apachec…"   5 minutes ago       Up 5 minutes        0.0.0.0:80->80/tcp    sleepy_elgamal
+22d0e6ae5916        ubuntu              "/bin/bash"              22 hours ago        Up 22 hours                               naughty_nash
+9756338fe3ac        centos:8            "/bin/bash"              22 hours ago        Up 46 minutes                             serene_sutherland
+
+Docker volume
+-------------
+docker volume create my-vol1
+
+sudo docker run -itd --mount source=my-vol1,destination=/opt/test ubuntu
+
+bind mount
+----------
+
+sudo docker run -it -v /home/ubuntu/docker-ws:/opt/mydisk ubuntu
+
+
+Docker Compose
+--------------
+sudo curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)"  -o /usr/local/bin/docker-compose
+sudo mv /usr/local/bin/docker-compose /usr/bin/docker-compose
+sudo chmod +x /usr/bin/docker-compose
+sudo docker-compose --version
+
+ubuntu@ip-172-31-26-16:~/docker-ws$ cat docker-compose.yml
+version: '3'
+services:
+  sample1:
+    image: httpd
+    ports:
+     - "443:80"
+  sample2:
+    image: nginx
+    ports:
+     - "80:80"
+
+
+sudo docker-compose up -d
+
+sudo docker-compose stop
+sudo docker-compose rm
+
+Docker swarm - orchestration
+----------------------------
+sudo docker swarm init --advertise-addr=52.66.202.228
+sudo docker swarm join --token SWMTKN-1-30jvrladrwdit9b7ci2dsrnx5s7p3oe5j3tgyq2aigouba73b2-5tehx724mv3l4edtg13v9zrcw 52.66.202.228:2377
+
+sudo docker node ls - to view the status of cluster
+
+docker service
+-----------------
+sudo docker service create --name apache --replicas 3 -p port sabacp/myubu
+sudo docker service ls
+sudo docker service scale web=8
+sudo docker service ps web
+sudo docker node inspect self
+sudo docker node inspect --pretty node1
+sudo docker node inspect --pretty node2
+
+sudo docker node update --availability drain  ip-172-31-26-16
+ubuntu@ip-172-31-26-16:~$ sudo docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+j5nmgkeu416cve10y55kxx9st     ip-172-31-25-33     Ready               Active                                  19.03.4
+tf15267glwerc1dutxjbxwmyb *   ip-172-31-26-16     Ready               Drain               Leader              19.03.4
+
+
+ubuntu@ip-172-31-26-16:~$ sudo docker network ls
+NETWORK ID          NAME                       DRIVER              SCOPE
+01091098b37d        bridge                     bridge              local
+c71bbd73c384        docker-wordpress_default   bridge              local
+d2dd6b3951a1        docker-ws_default          bridge              local
+2c59fb182b7c        docker_gwbridge            bridge              local
+b3b507f882ab        host                       host                local
+z9050y49o4bb        ingress                    overlay             swarm
+5f5d06e57fb0        none                       null                local
+
+
+sudo docker network create my-overlay -d overlay
+
+
+Ansible
+=======
+https://codebunk.com/b/6761100028034
+
+ubuntu@ip-172-31-10-79:~/ansible-ws$ cat hosts
+[myserver]
+127.0.0.1 ansible_connection=local
+[slave]
+172.31.12.165   ansible_user=ubuntu
+
+ 22  ansible -i hosts slave  -m ping
+   23  ansible -i hosts all  -m ping
+   24  ansible -i hosts ungrouped  -m ping
+   25  ansible -i hosts ungroupe  -m ping
+   26  ansible -i hosts ungrouped  -m ping
+   27  ansible -i hosts --help  -m ping
+   28  ansible -i hosts all  -m ping
+
+ #ansible-playbook -i hosts myfirst-playbook.yml
+
+Ansible Roles - organise the ansible playbook structure.
+-------------------------------------------------------
+ansible-playbook -i hosts site.yml
+
+ubuntu@ip-172-31-10-79:~/ansible-ws/roles$ tree apache/
+apache/
++-- README.md
++-- defaults
+¦   +-- main.yml
++-- files
+¦   +-- apache2.conf
+¦   +-- index.html
++-- handlers
+¦   +-- main.yml
++-- meta
+¦   +-- main.yml
++-- tasks
+¦   +-- configure.yml
+¦   +-- install.yml
+¦   +-- main.yml
+¦   +-- service.yml
++-- templates
++-- tests
+¦   +-- inventory
+¦   +-- test.yml
++-- vars
+    +-- main.yml
+
+
+
+
+

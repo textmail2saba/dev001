@@ -1,0 +1,12 @@
+Jenkins
+=======
+
+ - Jenkins is a software which allows "Continous integration". Jenkins will be installed where central build take place.
+
+- Continuous Integration is a development practice that requires developers to integrate code into a shared repository at regular intervals. 
+
+Requirements:
+2GB Memory
+JDK
+Enough Disk storage for Build
+Any OS

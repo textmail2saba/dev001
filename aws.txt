@@ -1,0 +1,85 @@
+EBS
+===
+General purpose 3000 to 10000 IOPS
+proisioned IOPS - 10000IPS more
+Throughput optimized
+cold disk
+magnetic disk
+
+Billing alarm - you can set perdefined amount to alert
+------------
+ELB
+---
+cloud watch - Resource logs and monitoring ELB, EC2 , Route53 etc.
+Cloud Trial - ApI audit logs
+Access logs - ELB logs stored on S3 where can store about ec2 instance deleted
+Request tracing - stored logs about applicatiob ELB on S3
+
+Resource group: region based to tag punch of instance
+
+Pricing model
+---------------
+on-demand
+Reserverd instance
+Spot instance
+Dedicated instance
+
+AWS Config - is region based <==> Stores Resource inventory, configuration history, config change notification and security complaince
+----------
+
+health dashboard
+-----------------
+service health dashboard
+personal health dashboard
+
+ELB
+====
+Application load balancer works in layer 7, (http/https), advanced routing technique like sending request to specifed webserver.
+network load balancer works at layer4(tcp) , most expensive and extreme performance ( Static IP address)
+classic load balancer - operates on both- deprecated. http/https/tcp
+
+ contact aws while overloading (prewarm)
+ALB behind Network load balancer.
+
+aws Systems manager - its kind of overrall insight portal for aws cloud services.
+-------------------
+Trusted advisor - kind of recommandation for compliance like cost, performance, security, service etc..
+Resource 
+
+
+placement groups - placed instances in different hardware
+---------------
+cluster instance - are created in single availablity zone(AZ)
+partition: logically created in each diffrent rack. multi- AZ
+spread instance on each rack
+
+Elasticity and scalablity
+========================
+Elasticity - inscrease the size of instance as required like small to medium as RI instance(Short term)
+Scalablity - increase the number of instance while going spike traffic.(Long Term)
+
+Dynamo DB(no sql key pair)
+--------
+scalablity - increase the IOPS if required.
+eslaticity - unlimited storage
+
+RDS
+---
+scalablity - cant do much
+elasticity - increase size from small to medium
+
+Aurora
+------
+scalablity - modify from small to medium
+Elasticity - aurora  serverless
+
+RDS-Multiaz - failover AZ by reboot the instance
+
+RDS read replicate - supports mysql,postgresql and mariaDB, Aurora( maximum 5 replicate)
+
+Elasticache- AWS ElastiCache is a software used to deploy, run and scale popular open source compatible in-memory data stores, example-Game, finance,ad, health service etc.
+
+DynamoDB -  is aligned with the values of Serverless applications: automatic scaling according to your application load, pay-per-what-you-use pricing, easy to get started with, and no servers to manage
+         - serverless  and no patch , no provision, no manage etc.. 
+
+Aurora - serverless -  relational DB and compatible with mysql/posgres- auto scaling

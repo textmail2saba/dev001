@@ -1,0 +1,72 @@
+Kubernetes
+==========
+
+ - K8 is container management Technology developed by google.
+
+ - K8 comes with cacbablity of automating deloyment, scaling of application and operatings of application containers across clusters.  it is capable of creating centric infrastructure.
+
+Feature
+-------
+   - continouse deployment, intergration and development.
+   - containeraized infrastructure.
+   - Application centric management
+   - Auto scal up feature.
+   - Environment consistance across development testing and prodcution.
+   
+
+Installation:
+------------
+ it will support to run app in VM, pyshical and cloud environment. further it removes host-centric app to containeraized centric app.
+
+K8-Architecture
+---------------
+Master / Nodes
+
+Master
+------
+Etcd, API Server, Scheduler and COntrol manager.
+
+Etcd - It stores the information about nodes configuration and only acecessable by API Server as its handle sensitive information
+
+API Server - kubernetes is an API server which provides all the operations on cluster using API. API server implements an interface , librarires and set of tools to be readily communicate with it. kubeconfig will reveals the tools .
+
+schedular - responsible for allocating pods to new node and utlization tracking.
+
+Control manager - it responsible for most of the collector which regulates cluster state and performs a cluster. 
+key controllers are endpoint, replication , namespace and service account controller.
+
+
+Node
+----
+DOcker, kubelet and k8 proxy 
+
+Docker- isolated container for an encapsulated applications.
+kubelet -  manage pods on node, volume, secret and creating new containers
+k8proxy - responsible for pods network componants
+
+
+OD
+Namespace kubernets - its an external qualification to the cluster when multiple teams access.
+-------------------
+
+Node - its configuration required to run pod service on it such as docker,kubelet and k8proxy.
+---
+
+K8 - Service - its a logical set of pods, its an abstraction on the top of pod which provides a single IP address -------------
+and DNS.
+  - By service DNS load balancing is easily achieved.
+
+PODS- pod is a collection of containers and its storage running in node.
+----
+k8- replication controller
+
+k8- deployment controller - its a higher version of replication controller.
+
+K8 volume - it doesn't has any limitations over pod and supports multiple volume at the same time.
+---------
+
+k8- Secrets - k8 objects used to store data like user/password  with encryption.
+-----------
+
+
+------------
